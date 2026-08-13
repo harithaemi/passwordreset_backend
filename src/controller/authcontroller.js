@@ -67,7 +67,11 @@ const Login = async (req, res) => {
             process.env.SECRET_TOKEN
         );
 
-        res.cookie("token", token);
+    res.cookie("token", token, {
+            httpOnly: true,
+            secure: true,
+            sameSite: "none"
+        });
 
         res.status(200).json({
             success: true,
@@ -88,22 +92,14 @@ const Login = async (req, res) => {
 
 
 const Logout = async (req, res) => {
-    try {
-        res.cookie("token", null, {
-            expires: new Date(Date.now())
-        });
+    res.cookie("token", null, {
+        httpOnly: true,
+        secure: true,
+        sameSite: "none",
+        expires: new Date(Date.now())
+    });
 
-        res.status(200).json({
-            success: true,
-            message: "Logout successful"
-        });
-
-    } catch (err) {
-        res.status(500).json({
-            success: false,
-            message: err.message
-        });
-    }
+    res.send("logout successful");
 };
 
 
@@ -124,7 +120,7 @@ const Forgotpassword = async (req, res) => {
         await user.save({ validateBeforeSave: false });
 
         const resetPasswordURL =
-            `http://localhost:5173/resetpassword/${resetToken}`;
+            `https://authpasswordreset.netlify.app/resetpassword/${resetToken}`;
 
         const message =
             `Reset your password using this link below:\n\n` +
