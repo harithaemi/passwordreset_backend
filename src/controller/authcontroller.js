@@ -31,9 +31,16 @@ const Register = async (req, res) => {
         });
 
     } catch (err) {
-        console.log(err);
+        console.log("Registration error:", err);
 
-        res.status(400).json({
+        if (err.code === 11000) {
+            return res.status(400).json({
+                success: false,
+                message: "Account already exists."
+            });
+        }
+
+        return res.status(400).json({
             success: false,
             message: err.message
         });
