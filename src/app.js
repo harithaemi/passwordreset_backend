@@ -9,10 +9,13 @@ const app = express();
 
 app.use(
   cors({
-    origin:"https://authpasswordreset.netlify.app",
-    credentials:true,
+    origin: [
+      "http://localhost:5173",
+      "https://authpasswordreset.netlify.app",
+    ],
+    credentials: true,
   })
-)
+);
 app.use(express.json());
 app.use(cookieParser());
 
